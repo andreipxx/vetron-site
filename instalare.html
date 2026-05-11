@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalare - VETRON</title>
+    <meta name="description" content="Ghid pas-cu-pas pentru instalarea aplicatiei VETRON pe Android. 3 minute, simplu si rapid.">
+    <meta property="og:title" content="Cum instalezi VETRON - Ghid pas-cu-pas">
+    <meta property="og:description" content="Instaleaza VETRON in 3 minute. Ghid complet cu screenshots si explicatii.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="VETRON">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0A0E0B;
+            --surface: #141A15;
+            --text: #E8FFE8;
+            --muted: #7A8A7C;
+            --accent: #00FF88;
+            --border: #1E2A1F;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 14, 11, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .v-box {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: #000;
+        }
+
+        .nav-brand span {
+            letter-spacing: 4px;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        /* MAIN */
+        main {
+            padding-top: 104px;
+            padding-bottom: 80px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: var(--muted);
+        }
+
+        /* STEP CARDS */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 56px;
+        }
+
+        .step-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 900;
+            font-size: 16px;
+            border-radius: 50%;
+            margin-bottom: 16px;
+        }
+
+        .step-card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .step-card p {
+            font-size: 15px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .step-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-card code {
+            display: inline-block;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 13px;
+            color: var(--accent);
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .step-card .note {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 255, 136, 0.06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .step-card .note strong {
+            color: var(--accent);
+        }
+
+        /* DOWNLOAD BUTTON */
+        .btn-download {
+            display: inline-block;
+            padding: 16px 36px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 800;
+            font-size: 16px;
+            font-family: inherit;
+            border: none;
+            border-radius: 12px;
+            text-decoration: none;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            margin-top: 8px;
+        }
+
+        .btn-download:hover {
+            opacity: 0.9;
+        }
+
+        .btn-download:active {
+            transform: scale(0.98);
+        }
+
+        /* PATH DISPLAY */
+        .path {
+            display: block;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--accent);
+            font-family: 'Consolas', 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        /* HELP SECTION */
+        .help-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .help-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .help-section p {
+            font-size: 15px;
+            color: var(--muted);
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .help-section a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .help-section a:hover {
+            opacity: 0.8;
+        }
+
+        .help-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .help-link {
+            display: inline-block;
+            padding: 10px 24px;
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .help-link:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* CTA FINAL */
+        .cta-final {
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .cta-final p {
+            font-size: 18px;
+            color: var(--text);
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+        .cta-final .highlight {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 56px 24px 32px;
+            background: var(--surface);
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--text);
+        }
+
+        .footer-copy {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .step-card {
+                padding: 24px;
+            }
+
+            .help-section {
+                padding: 28px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .help-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <div class="v-box">V</div>
+                <span>VETRON</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Acasa</a></li>
+                <li><a href="instalare.html" class="active">Instalare</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1>Cum instalezi VETRON</h1>
+            <p>Ghid pas-cu-pas, 3 minute</p>
+        </div>
+
+        <!-- STEPS -->
+        <div class="steps">
+
+            <!-- PAS 1 -->
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h2>Descarca APK</h2>
+                <p>Apasa butonul de mai jos sau descarca din Google Play Store.</p>
+                <a href="#" class="btn-download">DESCARCA VETRON APK</a>
+            </div>
+
+            <!-- PAS 2 -->
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h2>Deschide fisierul descarcat</h2>
+                <p>Deschide aplicatia <strong>Fisiere</strong> sau bara de notificari si apasa pe <code>VETRON.apk</code></p>
+                <div class="note">
+                    Daca telefonul intreaba de surse necunoscute, continua la <strong>Pasul 3</strong>.
+                </div>
+            </div>
+
+            <!-- PAS 3 -->
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h2>Permite instalarea din surse necunoscute</h2>
+                <span class="path">Setari &rarr; Aplicatii &rarr; Acces special &rarr; Instalare aplicatii necunoscute &rarr; Chrome (sau browserul tau) &rarr; Permite</span>
+                <div class="note">
+                    Aceasta setare e necesara <strong>o singura data</strong>.
+                </div>
+            </div>
+
+            <!-- PAS 4 -->
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h2>Instaleaza aplicatia</h2>
+                <p>Apasa <strong>INSTALEAZA</strong> cand apare dialogul Android.</p>
+                <p>Instalarea dureaza cateva secunde.</p>
+            </div>
+
+            <!-- PAS 5 -->
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h2>Deschide VETRON si seteaza masina</h2>
+                <p>La prima deschidere, alegi tipul de combustibil (<strong>Benzina</strong> / <strong>Diesel</strong> / <strong>GPL</strong>), consumul si pretul.</p>
+                <div class="note">
+                    Acestea se pot schimba oricand din <strong>Setari</strong>.
+                </div>
+            </div>
+
+            <!-- PAS 6 -->
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h2>Activeaza serviciul de Accesibilitate</h2>
+                <span class="path">Setari Android &rarr; Accesibilitate &rarr; Servicii instalate &rarr; VETRON &rarr; Activeaza</span>
+                <p style="margin-top: 16px;">Acest serviciu permite VETRON sa citeasca ofertele Bolt de pe ecran.</p>
+                <div class="note">
+                    <strong>VETRON NU trimite date pe internet.</strong> Totul ramane pe telefonul tau.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- HELP -->
+        <div class="help-section">
+            <h2>Probleme?</h2>
+            <p>Daca intampini dificultati la instalare sau configurare, suntem aici sa ajutam.</p>
+            <div class="help-links">
+                <a href="contact.html" class="help-link">Contacteaza-ne</a>
+                <a href="index.html#faq" class="help-link">Intrebari frecvente (FAQ)</a>
+            </div>
+        </div>
+
+        <!-- CTA FINAL -->
+        <div class="cta-final">
+            <p>
+                Gata! Deschide Bolt si asteapta prima oferta.<br>
+                <span class="highlight">VETRON iti va arata verdictul instant.</span>
+            </p>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Produs</h4>
+                    <ul>
+                        <li><a href="index.html">Acasa</a></li>
+                        <li><a href="index.html#calculator">Calculator</a></li>
+                        <li><a href="instalare.html">Instalare</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Termeni si Conditii</a></li>
+                        <li><a href="#">Politica de Confidentialitate</a></li>
+                        <li><a href="#">GDPR</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:vetron.ro@gmail.com">vetron.ro@gmail.com</a></li>
+                        <li><a href="https://wa.me/40XXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">GO PAMPA S.R.L.</a></li>
+                        <li><a href="#">Baia Mare, Romania</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-copy">
+                &copy; 2026 VETRON by GO PAMPA S.R.L. Toate drepturile rezervate.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
