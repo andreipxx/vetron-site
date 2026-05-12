@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politica de Confidentialitate — VETRON</title>
+<meta name="description" content="Politica de confidentialitate si protectia datelor personale VETRON, conform GDPR.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0E0B;--surface:#141A15;--text:#E8FFE8;--muted:#7A8A7C;--dim:#4A5A4C;--border:#1E2A1F;--accent:#00FF88;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;padding:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo .v-box{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#000}
+.nav-logo span{font-size:18px;font-weight:900;letter-spacing:4px;color:var(--accent)}
+
+.content{max-width:760px;margin:0 auto;padding:100px 24px 60px}
+h1{font-size:32px;font-weight:900;margin-bottom:8px}
+.date{font-size:13px;color:var(--muted);margin-bottom:40px}
+h2{font-size:20px;font-weight:800;margin-top:36px;margin-bottom:12px;color:var(--accent)}
+h3{font-size:16px;font-weight:700;margin-top:24px;margin-bottom:8px}
+p,li{font-size:15px;color:var(--muted);margin-bottom:12px}
+ul{padding-left:24px;margin-bottom:16px}
+li{margin-bottom:6px}
+.highlight{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin:20px 0}
+.highlight p{margin-bottom:0}
+
+.footer-mini{border-top:1px solid var(--border);padding:32px 24px;text-align:center;font-size:12px;color:var(--dim);max-width:760px;margin:0 auto}
+
+@media(max-width:768px){
+  .content{padding:80px 16px 40px}
+  h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo" style="text-decoration:none">
+    <div class="v-box">V</div>
+    <span>VETRON</span>
+  </a>
+</nav>
+
+<div class="content">
+
+<h1>Politica de Confidentialitate</h1>
+<p class="date">Ultima actualizare: 12 Mai 2026</p>
+
+<div class="highlight">
+  <p><strong>Rezumat:</strong> VETRON nu colecteaza, nu stocheaza si nu transmite date personale pe niciun server. Toate datele aplicatiei raman exclusiv pe telefonul tau.</p>
+</div>
+
+<h2>1. Cine suntem</h2>
+<p><strong>Operator de date:</strong> GO PAMPA S.R.L.</p>
+<ul>
+  <li>Sediu: Baia Mare, judetul Maramures, Romania</li>
+  <li>CUI: [se completeaza]</li>
+  <li>Email contact: <a href="mailto:contact@vetron.ro">contact@vetron.ro</a></li>
+</ul>
+<p>VETRON este o aplicatie Android dezvoltata de GO PAMPA S.R.L. care analizeaza ofertele de curse Bolt si calculeaza profitul real per kilometru pentru soferii rideshare din Romania.</p>
+
+<h2>2. Ce date prelucram</h2>
+
+<h3>2.1 Date stocate LOCAL pe dispozitiv (AsyncStorage)</h3>
+<p>Aceste date NU parasesc telefonul tau. Nu avem acces la ele.</p>
+<ul>
+  <li><strong>Setari combustibil</strong> — tip (benzina, diesel, GPL, hybrid), consum l/100km, pret/litru, uzura/km</li>
+  <li><strong>Informatii vehicul</strong> — numar inmatriculare, model masina</li>
+  <li><strong>Setari filtre</strong> — 6 filtre configurate de tine (min RON/km, max pickup, etc.)</li>
+  <li><strong>Istoric curse</strong> — pret, distanta, verdict (maxim 1000 intrari, FIFO)</li>
+  <li><strong>Licenta/plan activ</strong> — cod de activare, tip plan</li>
+  <li><strong>Preferinte overlay</strong> — mod simplu/complet</li>
+</ul>
+
+<h3>2.2 Date procesate temporar (nu stocate)</h3>
+<ul>
+  <li><strong>Text oferte Bolt</strong> — citit prin Android Accessibility Service, analizat in memorie, NU salvat integral</li>
+  <li><strong>Locatie pickup</strong> — trimisa catre Google Routes API (doar planul PRO) pentru calculul distantei reale cu trafic. Google primeste doar coordonatele, nu identitatea ta</li>
+</ul>
+
+<h3>2.3 Date pe care NU le colectam</h3>
+<ul>
+  <li>Nume, email, telefon (pana la implementarea conturilor — vezi sectiunea 8)</li>
+  <li>Locatie GPS continua</li>
+  <li>Contacte, fotografii, mesaje</li>
+  <li>Date de plata (card, IBAN)</li>
+  <li>Identificatori publicitari</li>
+  <li>Analytics sau telemetrie</li>
+</ul>
+
+<h2>3. Serviciul de Accesibilitate Android</h2>
+<p>VETRON foloseste <strong>Android Accessibility Service</strong> pentru a citi textul afisat de aplicatia Bolt Driver atunci cand primesti o oferta de cursa. Acest serviciu:</p>
+<ul>
+  <li>Citeste DOAR textul vizibil al notificarilor/ofertelor Bolt</li>
+  <li>Nu acceseaza alte aplicatii, mesaje, parole sau date sensibile</li>
+  <li>Proceseaza textul local, in memorie, fara a-l trimite la vreun server</li>
+  <li>Poate fi dezactivat oricand din Setari Android → Accesibilitate</li>
+</ul>
+
+<h2>4. Google Routes API (doar planul PRO)</h2>
+<p>Daca ai planul PRO activ, VETRON trimite coordonatele de pickup catre <strong>Google Routes API</strong> pentru a calcula distanta reala cu trafic.</p>
+<ul>
+  <li>Datele trimise: coordonate GPS punct pickup + punct destinatie</li>
+  <li>Datele NU includ: numele tau, numarul de telefon, placa masinii</li>
+  <li>Google proceseaza aceste date conform <a href="https://policies.google.com/privacy" target="_blank">Politicii de Confidentialitate Google</a></li>
+  <li>Cache local 24h — aceeasi ruta nu e retrimisa</li>
+  <li>Fara planul PRO, aceasta functie e inactiva (se foloseste estimare automata)</li>
+</ul>
+
+<h2>5. Baza legala (GDPR Art. 6)</h2>
+<ul>
+  <li><strong>Consimtamant (Art. 6.1.a)</strong> — activezi Accessibility Service manual, consimti explicit</li>
+  <li><strong>Executarea contractului (Art. 6.1.b)</strong> — procesarea datelor e necesara pentru functionarea aplicatiei</li>
+  <li><strong>Interes legitim (Art. 6.1.f)</strong> — imbunatatirea serviciului, doar pe date anonime/agregate</li>
+</ul>
+
+<h2>6. Drepturile tale (GDPR Art. 15-22)</h2>
+<p>Ai urmatoarele drepturi:</p>
+<ul>
+  <li><strong>Dreptul de acces</strong> — toate datele sunt pe telefonul tau, le vezi in aplicatie</li>
+  <li><strong>Dreptul la rectificare</strong> — poti edita orice setare direct in aplicatie</li>
+  <li><strong>Dreptul la stergere</strong> — dezinstaleaza aplicatia si toate datele locale se sterg automat. Sau: Setari → Sterge toate datele</li>
+  <li><strong>Dreptul la portabilitate</strong> — export date in format JSON (disponibil in Setari)</li>
+  <li><strong>Dreptul de opozitie</strong> — poti dezactiva Accessibility Service oricand</li>
+  <li><strong>Dreptul de a depune plangere</strong> — la ANSPDCP (Autoritatea Nationala de Supraveghere a Prelucrarii Datelor cu Caracter Personal), <a href="https://www.dataprotection.ro" target="_blank">www.dataprotection.ro</a></li>
+</ul>
+
+<h2>7. Siguranta datelor</h2>
+<ul>
+  <li>Toate datele sunt stocate local in AsyncStorage (sandbox Android, inaccesibil altor aplicatii)</li>
+  <li>Comunicarea cu Google Routes API se face exclusiv prin HTTPS (criptat TLS)</li>
+  <li>Nu exista baza de date externa, server, sau cloud storage</li>
+  <li>Aplicatia nu necesita cont de utilizator (versiunea curenta)</li>
+</ul>
+
+<h2>8. Modificari viitoare — Conturi de utilizator</h2>
+<p>In versiunile viitoare, VETRON va introduce un sistem optional de conturi (email + parola) pentru:</p>
+<ul>
+  <li>Gestionarea abonamentelor (plati recurente)</li>
+  <li>Sincronizare setari intre dispozitive</li>
+</ul>
+<p>Cand aceasta functie va fi disponibila:</p>
+<ul>
+  <li>Vom actualiza aceasta Politica de Confidentialitate</li>
+  <li>Vei fi notificat in aplicatie</li>
+  <li>Contul va fi optional — aplicatia va functiona si fara cont</li>
+  <li>Datele contului vor fi stocate pe Supabase (servere UE, conform GDPR)</li>
+  <li>Vei putea sterge contul si toate datele asociate in orice moment</li>
+</ul>
+
+<h2>9. Cookies</h2>
+<p>Site-ul VETRON (aceasta pagina web) <strong>nu foloseste cookies</strong>. Nu avem tracking, analytics sau cookies de marketing.</p>
+
+<h2>10. Retentie date</h2>
+<ul>
+  <li><strong>Date locale (telefon):</strong> pastrate pana cand le stergi tu sau dezinstalezi aplicatia</li>
+  <li><strong>Istoric curse:</strong> maxim 1000 intrari (cele mai vechi se sterg automat — FIFO)</li>
+  <li><strong>Cache Google Routes:</strong> 24 ore, apoi sters automat</li>
+</ul>
+
+<h2>11. Transferuri internationale</h2>
+<p>Singura data trimisa in afara dispozitivului tau sunt coordonatele GPS catre Google Routes API (servere Google, posibil in afara UE). Google asigura protectie adecvata conform <a href="https://policies.google.com/privacy/frameworks" target="_blank">cadrelor de transfer international</a>.</p>
+
+<h2>12. Minori</h2>
+<p>VETRON este destinat exclusiv persoanelor cu varsta de minim 18 ani (soferi rideshare activi). Nu colectam constient date de la minori.</p>
+
+<h2>13. Contact</h2>
+<p>Pentru orice intrebare legata de datele tale personale:</p>
+<ul>
+  <li>Email: <a href="mailto:contact@vetron.ro">contact@vetron.ro</a></li>
+  <li>Adresa: GO PAMPA S.R.L., Baia Mare, jud. Maramures, Romania</li>
+</ul>
+<p>Vom raspunde in maxim 30 de zile, conform GDPR.</p>
+
+<h2>14. Autoritatea de supraveghere</h2>
+<p>Daca consideri ca drepturile tale au fost incalcate, poti depune o plangere la:</p>
+<p><strong>ANSPDCP</strong> — Autoritatea Nationala de Supraveghere a Prelucrarii Datelor cu Caracter Personal<br>
+B-dul G-ral. Gheorghe Magheru 28-30, Sector 1, Bucuresti<br>
+<a href="https://www.dataprotection.ro" target="_blank">www.dataprotection.ro</a><br>
+Email: anspdcp@dataprotection.ro</p>
+
+</div>
+
+<div class="footer-mini">
+  <a href="index.html">VETRON</a> &middot; <a href="termeni.html">Termeni</a> &middot; <a href="contact.html">Contact</a><br>
+  &copy; 2026 GO PAMPA S.R.L. Toate drepturile rezervate.
+</div>
+
+</body>
+</html>

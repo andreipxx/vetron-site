@@ -6,19 +6,11 @@
 <title>VETRON — Performance Intelligence for Drivers</title>
 <meta name="description" content="Singura aplicatie care iti spune instant daca o cursa Bolt merita sau nu. Calcul real de profit pe kilometru, overlay live, filtre inteligente.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="icon-512.png">
 <meta property="og:title" content="VETRON — Performance Intelligence for Drivers">
 <meta property="og:description" content="Nu mai conduce orbeste. Activeaza inteligenta in fiecare cursa Bolt.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://andreipxx.github.io/vetron-site/og-image.png">
-<meta property="og:url" content="https://andreipxx.github.io/vetron-site/">
-<meta property="og:locale" content="ro_RO">
+<meta property="og:image" content="og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="VETRON — Performance Intelligence for Drivers">
-<meta name="twitter:description" content="Singura aplicatie care iti spune instant daca o cursa Bolt merita sau nu.">
-<meta name="twitter:image" content="https://andreipxx.github.io/vetron-site/og-image.png">
-<meta name="theme-color" content="#0A0E0B">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -215,7 +207,6 @@ a:hover{text-decoration:underline}
     <a href="#plans">Planuri</a>
     <a href="#calculator">Calculator</a>
     <a href="#faq">FAQ</a>
-    <a href="register.html">Cont</a>
     <a href="#download" class="nav-cta">DESCARCA</a>
   </div>
 </nav>
@@ -324,7 +315,7 @@ a:hover{text-decoration:underline}
       <div class="feature-icon-wrap" style="background:rgba(255,184,0,0.1)">&#9981;</div>
       <div class="feature-body">
         <h3>Cost Real per KM</h3>
-        <p>Benzina, diesel, electric, GPL, hybrid HEV, hybrid PHEV &mdash; calcul exact cu consum, pret carburant si uzura vehicul. Nu rata fixa, ci costul TAU real.</p>
+        <p>Benzina, diesel, GPL, hybrid &mdash; calcul exact cu consum, pret carburant si uzura vehicul. Nu rata fixa, ci costul TAU real.</p>
       </div>
     </div>
     <div class="feature-card">
@@ -373,26 +364,14 @@ a:hover{text-decoration:underline}
         <span class="calc-unit">km</span>
       </div>
       <div class="calc-row">
-        <span class="calc-label">Tip combustibil</span>
-        <select class="calc-input" id="c-fueltype" onchange="updateFuelDefaults()" style="appearance:auto;cursor:pointer">
-          <option value="benzina">Benzina</option>
-          <option value="diesel">Diesel</option>
-          <option value="electric">Electric</option>
-          <option value="benzina_gpl">Benzina + GPL</option>
-          <option value="hybrid_hev">Hybrid (HEV)</option>
-          <option value="hybrid_phev">Hybrid + GPL (PHEV)</option>
-        </select>
-        <span class="calc-unit"></span>
-      </div>
-      <div class="calc-row">
         <span class="calc-label">Consum</span>
         <input type="number" class="calc-input" id="c-consum" value="7.5" step="0.5">
-        <span class="calc-unit" id="c-consum-unit">l/100km</span>
+        <span class="calc-unit">l/100km</span>
       </div>
       <div class="calc-row">
         <span class="calc-label">Pret carburant</span>
         <input type="number" class="calc-input" id="c-fuel" value="7.50" step="0.1">
-        <span class="calc-unit" id="c-fuel-unit">RON/l</span>
+        <span class="calc-unit">RON/l</span>
       </div>
       <div class="calc-row">
         <span class="calc-label">Uzura vehicul</span>
@@ -417,7 +396,7 @@ a:hover{text-decoration:underline}
     <tbody>
       <tr><td>Overlay pe Bolt</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Filtre curse</td><td style="color:var(--go)">6</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
-      <tr><td>Cost real GPL/Diesel/Hybrid/Electric</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
+      <tr><td>Cost real GPL/Diesel</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Romania / RON</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Google Routes trafic</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Fara cont obligatoriu</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--go)">&#10003;</td></tr>
@@ -534,9 +513,8 @@ a:hover{text-decoration:underline}
 <section class="cta-section" id="download">
   <h2>Nu mai conduce orbeste.</h2>
   <p>Trial gratuit &mdash; 50 de curse, fara card, fara cont.</p>
-  <a href="https://expo.dev/accounts/andreipxx/projects/DriverPowerRO/builds/a1d7ff0e-e1f6-4df3-9145-ff3712f5742e" class="btn-primary" style="font-size:18px;padding:16px 40px" target="_blank" rel="noopener">&#11015; DESCARCA VETRON APK</a>
+  <a href="#" class="btn-primary" style="font-size:18px;padding:16px 40px">&#11015; DESCARCA VETRON APK</a>
   <p style="margin-top:16px;font-size:12px;color:var(--dim)">Android 8+ &middot; ~15 MB &middot; Fara reclame</p>
-  <p style="margin-top:12px"><a href="register.html" style="color:var(--accent);font-size:14px;font-weight:600">Creaza cont gratuit &rarr;</a></p>
 </section>
 
 <!-- FOOTER -->
@@ -553,23 +531,18 @@ a:hover{text-decoration:underline}
       <h4>Legal</h4>
       <a href="gdpr.html">GDPR / Privacy</a>
       <a href="termeni.html">Termeni</a>
-      <a href="gdpr.html#cookies">Cookies</a>
+      <a href="#">Cookies</a>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <a href="mailto:vetron.ro@gmail.com">vetron.ro@gmail.com</a>
-      <a href="contact.html">Facebook</a>
-      <a href="contact.html">Instagram</a>
+      <a href="mailto:contact@vetron.ro">contact@vetron.ro</a>
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
-      <p style="font-size:13px;color:var(--dim);line-height:1.5">GO PAMPA S.R.L.<br>CUI: 47422710<br>Al. Odobescu 2, apt 15<br>Baia Mare 430101, Romania</p>
+      <p style="font-size:13px;color:var(--dim);line-height:1.5">GO PAMPA S.R.L.<br>Baia Mare, Romania</p>
     </div>
-  </div>
-  <div style="text-align:center;padding:20px 0 12px;border-top:1px solid var(--border);margin-top:16px;line-height:2">
-    <a href="https://anpc.ro/" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none;margin-right:20px">ANPC</a>
-    <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none;margin-right:20px">SAL (Solutionarea Alternativa a Litigiilor)</a>
-    <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none">SOL (Solutionarea Online a Litigiilor)</a>
   </div>
   <div class="footer-bottom">&copy; 2026 VETRON by GO PAMPA S.R.L. Toate drepturile rezervate.</div>
 </footer>
@@ -616,24 +589,6 @@ function calculate(){
       <span style="color:var(--stop)">STOP &lt; 1.60</span>
     </div>
   `;
-}
-const FUEL_DEFAULTS={
-  benzina:{consum:8.0,price:7.50,unit:'l/100km',priceUnit:'RON/l',wear:0.30},
-  diesel:{consum:6.0,price:7.80,unit:'l/100km',priceUnit:'RON/l',wear:0.30},
-  electric:{consum:17.0,price:1.50,unit:'kWh/100km',priceUnit:'RON/kWh',wear:0.20},
-  benzina_gpl:{consum:9.5,price:3.50,unit:'l/100km',priceUnit:'RON/l',wear:0.30},
-  hybrid_hev:{consum:4.5,price:7.50,unit:'l/100km',priceUnit:'RON/l',wear:0.25},
-  hybrid_phev:{consum:5.0,price:7.50,unit:'l/100km',priceUnit:'RON/l',wear:0.25}
-};
-function updateFuelDefaults(){
-  const t=document.getElementById('c-fueltype').value;
-  const d=FUEL_DEFAULTS[t];
-  document.getElementById('c-consum').value=d.consum;
-  document.getElementById('c-fuel').value=d.price;
-  document.getElementById('c-wear').value=d.wear;
-  document.getElementById('c-consum-unit').textContent=d.unit;
-  document.getElementById('c-fuel-unit').textContent=d.priceUnit;
-  calculate();
 }
 document.addEventListener('DOMContentLoaded',()=>calculate());
 </script>

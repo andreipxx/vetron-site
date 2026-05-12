@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gopampa.github.io/vetron-site/sitemap.xml

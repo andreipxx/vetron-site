@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creează cont VETRON</title>
+<meta name="description" content="Creează-ți un cont VETRON pentru a accesa toate funcționalitățile aplicației. Înregistrare rapidă și gratuită.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta property="og:title" content="Creează cont VETRON">
+<meta property="og:description" content="Creează-ți un cont VETRON pentru a accesa toate funcționalitățile aplicației.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VETRON">
+<meta property="og:image" content="https://andreipxx.github.io/vetron-site/og-image.png">
+<meta property="og:locale" content="ro_RO">
+<meta name="theme-color" content="#0A0E0B">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0E0B;--surface:#141A15;--surface-alt:#1A2218;
+  --text:#E8FFE8;--muted:#7A8A7C;--dim:#4A5A4C;
+  --border:#1E2A1F;--accent:#00FF88;--accent-dim:#00CC6A;
+  --stop:#FF3366;--think:#FFB800;--go:#00FF88;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo .v-box{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#000}
+.nav-logo span{font-size:18px;font-weight:900;letter-spacing:4px;color:var(--accent)}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--muted);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.nav-cta{background:var(--accent);color:#000!important;padding:8px 20px;border-radius:8px;font-weight:700;font-size:13px;letter-spacing:1px}
+.nav-cta:hover{background:var(--accent-dim);text-decoration:none}
+
+/* AUTH FORM */
+.auth-wrap{max-width:480px;margin:120px auto 60px;padding:0 24px}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px 32px}
+.auth-title{font-size:28px;font-weight:900;text-align:center;margin-bottom:8px}
+.auth-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:32px}
+.auth-field{margin-bottom:16px}
+.auth-label{font-size:11px;color:var(--accent);letter-spacing:3px;font-weight:700;margin-bottom:6px;display:block}
+.auth-input{width:100%;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-size:15px;outline:none;transition:border-color .2s;font-family:inherit}
+.auth-input:focus{border-color:var(--accent)}
+.auth-btn{width:100%;padding:14px;background:var(--accent);color:#000;border:none;border-radius:12px;font-size:16px;font-weight:800;letter-spacing:1px;cursor:pointer;margin-top:8px;transition:background .2s;font-family:inherit}
+.auth-btn:hover{background:var(--accent-dim)}
+.auth-btn:disabled{opacity:0.5;cursor:not-allowed}
+.auth-error{color:var(--stop);font-size:13px;text-align:center;margin-top:12px;display:none}
+.auth-success{color:var(--go);font-size:13px;text-align:center;margin-top:12px;display:none}
+.auth-link{text-align:center;margin-top:20px;font-size:14px;color:var(--muted)}
+.auth-link a{color:var(--accent)}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:48px 24px;max-width:1000px;margin:0 auto}
+.footer-inner{display:flex;gap:48px;flex-wrap:wrap;margin-bottom:32px}
+.footer-col{flex:1;min-width:160px}
+.footer-col h4{font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.footer-col a{display:block;color:var(--dim);font-size:13px;padding:3px 0;transition:color .2s}
+.footer-col a:hover{color:var(--accent);text-decoration:none}
+.footer-col p{font-size:13px;color:var(--dim);line-height:1.5}
+.footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.footer-logo .v-box-sm{width:24px;height:24px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#000}
+.footer-logo span{font-size:14px;font-weight:900;letter-spacing:3px;color:var(--accent)}
+.footer-bottom{font-size:12px;color:var(--dim);text-align:center;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-legal-links{display:flex;gap:16px}
+.footer-legal-links a{color:var(--muted);font-size:12px;text-decoration:none}
+.footer-legal-links a:hover{color:var(--accent)}
+
+@media(max-width:768px){
+  .nav-links a:not(.nav-cta){display:none}
+  .auth-wrap{margin:100px auto 40px;padding:0 16px}
+  .auth-card{padding:28px 20px}
+  .auth-title{font-size:24px}
+  .footer-inner{flex-direction:column;gap:24px}
+  .footer-bottom{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo"><div class="v-box">V</div><span>VETRON</span></a>
+  <div class="nav-links">
+    <a href="index.html#calculator">Calculator</a>
+    <a href="index.html#plans">Planuri</a>
+    <a href="contact.html">Contact</a>
+    <a href="register.html">Cont</a>
+    <a href="instalare.html" class="nav-cta">INSTALEAZĂ</a>
+  </div>
+</nav>
+
+<!-- REGISTER FORM -->
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1 class="auth-title">Creează cont</h1>
+    <p class="auth-sub">Înregistrează-te pentru a accesa VETRON</p>
+    <form id="register-form" onsubmit="handleRegister(event)">
+      <div class="auth-field">
+        <label class="auth-label" for="reg-name">NUME</label>
+        <input class="auth-input" type="text" id="reg-name" placeholder="Numele tău" required>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="reg-email">EMAIL</label>
+        <input class="auth-input" type="email" id="reg-email" placeholder="email@exemplu.com" required>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="reg-password">PAROLĂ</label>
+        <input class="auth-input" type="password" id="reg-password" placeholder="Minim 6 caractere" required minlength="6">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="reg-confirm">CONFIRMĂ PAROLA</label>
+        <input class="auth-input" type="password" id="reg-confirm" placeholder="Repetă parola" required minlength="6">
+      </div>
+      <button class="auth-btn" type="submit" id="reg-btn">CREEAZĂ CONT</button>
+      <div class="auth-error" id="reg-error"></div>
+      <div class="auth-success" id="reg-success"></div>
+    </form>
+    <div class="auth-link">Ai deja cont? <a href="login.html">Autentifică-te</a></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo"><div class="v-box-sm">V</div><span>VETRON</span></div>
+      <p>Performance Intelligence for Drivers</p>
+      <p style="font-size:11px;color:var(--dim);margin-top:8px">© 2024 GO PAMPA S.R.L.<br>CUI: 47422710<br>Al. Odobescu 2, apt 15, Baia Mare 430101</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produs</h4>
+      <a href="index.html#features">Funcționalități</a>
+      <a href="index.html#calculator">Calculator</a>
+      <a href="index.html#plans">Planuri & Prețuri</a>
+      <a href="instalare.html">Instalare</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="termeni.html">Termeni și Condiții</a>
+      <a href="gdpr.html">Politica de Confidențialitate</a>
+      <a href="gdpr.html#cookies">Cookie-uri</a>
+      <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="contact.html">Formular contact</a>
+      <a href="https://wa.me/40743086816" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="contact.html">Facebook</a>
+      <a href="contact.html">Instagram</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 GO PAMPA S.R.L. · Toate drepturile rezervate</p>
+    <div class="footer-legal-links">
+      <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a>
+      <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener">SAL</a>
+      <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">SOL</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://cgvcklkewmxqbltyigme.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNndmNrbGtld214cWJsdHlpZ21lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjU0NzEsImV4cCI6MjA5NDEwMTQ3MX0.bqryT_VgpgaxwITapafX9FsHRNlhUQALGsv8drYWXXM';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const errorEl = document.getElementById('reg-error');
+  const successEl = document.getElementById('reg-success');
+  const btn = document.getElementById('reg-btn');
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+
+  errorEl.style.display = 'none';
+  successEl.style.display = 'none';
+
+  // Validate email
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errorEl.textContent = 'Introdu o adresă de email validă.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Validate password length
+  if (password.length < 6) {
+    errorEl.textContent = 'Parola trebuie să aibă minim 6 caractere.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Validate password match
+  if (password !== confirm) {
+    errorEl.textContent = 'Parolele nu se potrivesc.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  btn.textContent = 'Se procesează...';
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: { name: name }
+      }
+    });
+
+    if (error) {
+      errorEl.textContent = error.message;
+      errorEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'CREEAZĂ CONT';
+      return;
+    }
+
+    successEl.textContent = 'Cont creat cu succes! Verifică email-ul. Vei fi redirecționat...';
+    successEl.style.display = 'block';
+    document.getElementById('register-form').style.display = 'none';
+
+    setTimeout(function() {
+      window.location.href = 'login.html';
+    }, 3000);
+  } catch (err) {
+    errorEl.textContent = 'Eroare de conexiune. Încearcă din nou.';
+    errorEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'CREEAZĂ CONT';
+  }
+}
+</script>
+</body>
+</html>

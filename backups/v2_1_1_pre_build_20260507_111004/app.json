@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "DriverPower",
+    "slug": "DriverPowerRO",
+    "version": "2.1.1",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0E0B"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ro.driverpower.app"
+    },
+    "android": {
+      "package": "ro.driverpower.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A0E0B"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-dev-client"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "25504c56-d195-4296-a62e-6cb0baecc8fd"
+      }
+    },
+    "owner": "andreipxx"
+  }
+}
