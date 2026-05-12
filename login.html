@@ -15,7 +15,6 @@
 <meta property="og:image" content="https://andreipxx.github.io/vetron-site/og-image.png">
 <meta property="og:locale" content="ro_RO">
 <meta name="theme-color" content="#0A0E0B">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -164,41 +163,50 @@ a:hover{text-decoration:underline}
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-const SUPABASE_URL = 'https://cgvcklkewmxqbltyigme.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNndmNrbGtld214cWJsdHlpZ21lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjU0NzEsImV4cCI6MjA5NDEwMTQ3MX0.bqryT_VgpgaxwITapafX9FsHRNlhUQALGsv8drYWXXM';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var sb = null;
+try {
+  sb = window.supabase.createClient(
+    'https://cgvcklkewmxqbltyigme.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNndmNrbGtld214cWJsdHlpZ21lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjU0NzEsImV4cCI6MjA5NDEwMTQ3MX0.bqryT_VgpgaxwITapafX9FsHRNlhUQALGsv8drYWXXM'
+  );
+} catch(e) {
+  console.error('Supabase init failed:', e);
+}
 
 async function handleLogin(e) {
   e.preventDefault();
-  const errorEl = document.getElementById('login-error');
-  const successEl = document.getElementById('login-success');
-  const btn = document.getElementById('login-btn');
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
+  var errorEl = document.getElementById('login-error');
+  var successEl = document.getElementById('login-success');
+  var btn = document.getElementById('login-btn');
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
 
+  errorEl.textContent = '';
   errorEl.style.display = 'none';
   successEl.style.display = 'none';
 
-  // Validate email
+  if (!sb) {
+    errorEl.textContent = 'Eroare: serviciul nu s-a încărcat. Reîncarcă pagina.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errorEl.textContent = 'Introdu o adresă de email validă.';
     errorEl.style.display = 'block';
     return;
   }
 
-  // Loading state
   btn.disabled = true;
   btn.textContent = 'Se procesează...';
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+    var result = await sb.auth.signInWithPassword({ email: email, password: password });
 
-    if (error) {
-      errorEl.textContent = error.message;
+    if (result.error) {
+      errorEl.textContent = result.error.message;
       errorEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'INTRĂ';
@@ -213,7 +221,7 @@ async function handleLogin(e) {
       window.location.href = 'cont.html';
     }, 2000);
   } catch (err) {
-    errorEl.textContent = 'Eroare de conexiune. Încearcă din nou.';
+    errorEl.textContent = 'Eroare: ' + (err.message || 'Conexiune eșuată.');
     errorEl.style.display = 'block';
     btn.disabled = false;
     btn.textContent = 'INTRĂ';
@@ -222,28 +230,28 @@ async function handleLogin(e) {
 
 async function handleForgot(e) {
   e.preventDefault();
-  const errorEl = document.getElementById('login-error');
-  const successEl = document.getElementById('login-success');
-  const email = document.getElementById('login-email').value.trim();
+  var errorEl = document.getElementById('login-error');
+  var successEl = document.getElementById('login-success');
+  var email = document.getElementById('login-email').value.trim();
 
   errorEl.style.display = 'none';
   successEl.style.display = 'none';
 
+  if (!sb) { return; }
+
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errorEl.textContent = 'Introdu adresa de email în câmpul de mai sus pentru resetarea parolei.';
+    errorEl.textContent = 'Introdu adresa de email pentru resetarea parolei.';
     errorEl.style.display = 'block';
     return;
   }
 
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-
-    if (error) {
-      errorEl.textContent = error.message;
+    var result = await sb.auth.resetPasswordForEmail(email);
+    if (result.error) {
+      errorEl.textContent = result.error.message;
       errorEl.style.display = 'block';
       return;
     }
-
     successEl.textContent = 'Email de resetare trimis! Verifică inbox-ul.';
     successEl.style.display = 'block';
   } catch (err) {
