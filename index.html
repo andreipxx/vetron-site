@@ -321,7 +321,7 @@ a:hover{text-decoration:underline}
       <div class="feature-icon-wrap" style="background:rgba(255,184,0,0.1)">&#9981;</div>
       <div class="feature-body">
         <h3>Cost Real per KM</h3>
-        <p>Benzina, diesel, GPL, hybrid &mdash; calcul exact cu consum, pret carburant si uzura vehicul. Nu rata fixa, ci costul TAU real.</p>
+        <p>Benzina, diesel, electric, GPL, hybrid HEV, hybrid PHEV &mdash; calcul exact cu consum, pret carburant si uzura vehicul. Nu rata fixa, ci costul TAU real.</p>
       </div>
     </div>
     <div class="feature-card">
@@ -370,14 +370,26 @@ a:hover{text-decoration:underline}
         <span class="calc-unit">km</span>
       </div>
       <div class="calc-row">
+        <span class="calc-label">Tip combustibil</span>
+        <select class="calc-input" id="c-fueltype" onchange="updateFuelDefaults()" style="appearance:auto;cursor:pointer">
+          <option value="benzina">Benzina</option>
+          <option value="diesel">Diesel</option>
+          <option value="electric">Electric</option>
+          <option value="benzina_gpl">Benzina + GPL</option>
+          <option value="hybrid_hev">Hybrid (HEV)</option>
+          <option value="hybrid_phev">Hybrid + GPL (PHEV)</option>
+        </select>
+        <span class="calc-unit"></span>
+      </div>
+      <div class="calc-row">
         <span class="calc-label">Consum</span>
         <input type="number" class="calc-input" id="c-consum" value="7.5" step="0.5">
-        <span class="calc-unit">l/100km</span>
+        <span class="calc-unit" id="c-consum-unit">l/100km</span>
       </div>
       <div class="calc-row">
         <span class="calc-label">Pret carburant</span>
         <input type="number" class="calc-input" id="c-fuel" value="7.50" step="0.1">
-        <span class="calc-unit">RON/l</span>
+        <span class="calc-unit" id="c-fuel-unit">RON/l</span>
       </div>
       <div class="calc-row">
         <span class="calc-label">Uzura vehicul</span>
@@ -402,7 +414,7 @@ a:hover{text-decoration:underline}
     <tbody>
       <tr><td>Overlay pe Bolt</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Filtre curse</td><td style="color:var(--go)">6</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
-      <tr><td>Cost real GPL/Diesel</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
+      <tr><td>Cost real GPL/Diesel/Hybrid/Electric</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Romania / RON</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Google Routes trafic</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td></tr>
       <tr><td>Fara cont obligatoriu</td><td style="color:var(--go)">&#10003;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--stop)">&#10007;</td><td style="color:var(--go)">&#10003;</td></tr>
@@ -550,6 +562,10 @@ a:hover{text-decoration:underline}
       <p style="font-size:13px;color:var(--dim);line-height:1.5">GO PAMPA S.R.L.<br>Baia Mare, Romania</p>
     </div>
   </div>
+  <div style="text-align:center;padding:16px 0 8px;border-top:1px solid var(--border);margin-top:16px">
+    <a href="https://anpc.ro/" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none;margin-right:16px">ANPC</a>
+    <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none">SOL (Solutionarea Online a Litigiilor)</a>
+  </div>
   <div class="footer-bottom">&copy; 2026 VETRON by GO PAMPA S.R.L. Toate drepturile rezervate.</div>
 </footer>
 
@@ -595,6 +611,24 @@ function calculate(){
       <span style="color:var(--stop)">STOP &lt; 1.60</span>
     </div>
   `;
+}
+const FUEL_DEFAULTS={
+  benzina:{consum:8.0,price:7.50,unit:'l/100km',priceUnit:'RON/l',wear:0.30},
+  diesel:{consum:6.0,price:7.80,unit:'l/100km',priceUnit:'RON/l',wear:0.30},
+  electric:{consum:17.0,price:1.50,unit:'kWh/100km',priceUnit:'RON/kWh',wear:0.20},
+  benzina_gpl:{consum:9.5,price:3.50,unit:'l/100km',priceUnit:'RON/l',wear:0.30},
+  hybrid_hev:{consum:4.5,price:7.50,unit:'l/100km',priceUnit:'RON/l',wear:0.25},
+  hybrid_phev:{consum:5.0,price:7.50,unit:'l/100km',priceUnit:'RON/l',wear:0.25}
+};
+function updateFuelDefaults(){
+  const t=document.getElementById('c-fueltype').value;
+  const d=FUEL_DEFAULTS[t];
+  document.getElementById('c-consum').value=d.consum;
+  document.getElementById('c-fuel').value=d.price;
+  document.getElementById('c-wear').value=d.wear;
+  document.getElementById('c-consum-unit').textContent=d.unit;
+  document.getElementById('c-fuel-unit').textContent=d.priceUnit;
+  calculate();
 }
 document.addEventListener('DOMContentLoaded',()=>calculate());
 </script>
