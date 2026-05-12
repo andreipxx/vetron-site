@@ -228,13 +228,13 @@ async function handleRegister(e) {
       return;
     }
 
-    successEl.textContent = 'Cont creat cu succes! Verifică email-ul. Vei fi redirecționat...';
+    successEl.textContent = 'Cont creat cu succes! Vei fi redirecționat la contul tău...';
     successEl.style.display = 'block';
     document.getElementById('register-form').style.display = 'none';
 
     setTimeout(function() {
-      window.location.href = 'login.html';
-    }, 3000);
+      window.location.href = 'cont.html';
+    }, 2000);
   } catch (err) {
     errorEl.textContent = 'Eroare de conexiune. Încearcă din nou.';
     errorEl.style.display = 'block';

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contul meu — VETRON</title>
+<meta name="description" content="Gestionează contul tău VETRON. Vizualizează planul activ și alege un abonament.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta name="theme-color" content="#0A0E0B">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0E0B;--surface:#141A15;--surface-alt:#1A2218;
+  --text:#E8FFE8;--muted:#7A8A7C;--dim:#4A5A4C;
+  --border:#1E2A1F;--accent:#00FF88;--accent-dim:#00CC6A;
+  --stop:#FF3366;--think:#FFB800;--go:#00FF88;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo .v-box{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#000}
+.nav-logo span{font-size:18px;font-weight:900;letter-spacing:4px;color:var(--accent)}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--muted);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.nav-cta{background:var(--accent);color:#000!important;padding:8px 20px;border-radius:8px;font-weight:700;font-size:13px;letter-spacing:1px}
+.nav-cta:hover{background:var(--accent-dim);text-decoration:none}
+
+/* MAIN */
+.page-wrap{max-width:900px;margin:100px auto 60px;padding:0 24px}
+.page-title{font-size:32px;font-weight:900;margin-bottom:4px}
+.page-sub{font-size:14px;color:var(--muted);margin-bottom:32px}
+
+/* PROFILE CARD */
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;align-items:center;gap:20px;margin-bottom:32px}
+.profile-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:var(--accent);background:var(--surface-alt);flex-shrink:0}
+.profile-info{flex:1}
+.profile-name{font-size:20px;font-weight:800}
+.profile-email{font-size:13px;color:var(--muted);font-family:monospace}
+.profile-plan-badge{display:inline-block;padding:4px 14px;border-radius:6px;font-size:11px;font-weight:900;letter-spacing:2px;margin-top:6px}
+.badge-trial{border:1px solid var(--think);color:var(--think)}
+.badge-simplu{border:1px solid var(--go);color:var(--go)}
+.badge-pro{background:var(--accent);color:#000}
+.profile-actions{display:flex;gap:12px;flex-shrink:0}
+.btn-logout{background:transparent;border:1px solid var(--stop);color:var(--stop);padding:8px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-logout:hover{background:rgba(255,51,102,0.1)}
+
+/* SECTION LABEL */
+.section-label{font-size:11px;color:var(--accent);letter-spacing:4px;font-weight:700;text-transform:uppercase;margin-bottom:12px;margin-top:8px}
+
+/* PLAN CARDS */
+.plans-grid{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.plan-card{flex:1;min-width:240px;max-width:300px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;transition:border-color .2s,transform .2s}
+.plan-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.plan-card.recommended{border:2px solid var(--accent);box-shadow:0 0 40px rgba(0,255,136,0.1)}
+.plan-card.active{border:2px solid var(--go);box-shadow:0 0 24px rgba(0,255,136,0.15)}
+.plan-badge{position:absolute;top:-12px;right:16px;background:var(--accent);color:#000;padding:4px 12px;border-radius:4px;font-size:10px;font-weight:900;letter-spacing:2px}
+.plan-badge-active{position:absolute;top:-12px;left:16px;background:var(--go);color:#000;padding:4px 12px;border-radius:4px;font-size:10px;font-weight:900;letter-spacing:2px}
+.plan-name{font-size:22px;font-weight:900;margin-bottom:4px}
+.plan-price{font-size:28px;font-weight:900;font-family:monospace;margin-bottom:4px}
+.plan-price-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.plan-features{list-style:none;padding:0}
+.plan-features li{padding:5px 0;font-size:13px;display:flex;align-items:center;gap:8px}
+.plan-features li.on{color:var(--text)}
+.plan-features li.off{color:var(--dim)}
+.plan-features .check{font-size:14px}
+.plan-btn{display:block;width:100%;padding:12px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:800;letter-spacing:1px;cursor:pointer;margin-top:16px;text-align:center;transition:background .2s}
+.plan-btn:hover{background:var(--accent-dim);text-decoration:none}
+.plan-btn.outline{background:transparent;border:1.5px solid var(--accent);color:var(--accent)}
+.plan-btn.current{background:var(--surface-alt);color:var(--muted);border:1px solid var(--border);cursor:default}
+
+/* INFO */
+.info-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:32px}
+.info-box h3{font-size:16px;font-weight:800;margin-bottom:8px}
+.info-box p{font-size:13px;color:var(--muted);line-height:1.6}
+.info-box a{color:var(--accent)}
+
+/* LOADING */
+.loading{text-align:center;padding:80px 0;color:var(--muted)}
+
+/* FOOTER */
+.footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 24px 20px;margin-top:60px}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;gap:40px;flex-wrap:wrap}
+.footer-col{flex:1;min-width:180px}
+.footer-col h4{font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:12px;text-transform:uppercase}
+.footer-col a{display:block;color:var(--dim);font-size:13px;padding:3px 0;transition:color .2s}
+.footer-col a:hover{color:var(--accent);text-decoration:none}
+.footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.footer-logo .v-box-sm{width:24px;height:24px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#000}
+.footer-logo span{font-size:16px;font-weight:900;letter-spacing:3px;color:var(--accent)}
+.footer-bottom{max-width:1000px;margin:20px auto 0;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:11px;color:var(--dim)}
+.footer-legal-links{display:flex;gap:16px}
+.footer-legal-links a{font-size:11px;color:var(--dim)}
+.footer-legal-links a:hover{color:var(--accent)}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .profile-card{flex-direction:column;text-align:center}
+  .profile-actions{justify-content:center}
+  .plans-grid{flex-direction:column;align-items:center}
+  .footer-inner{flex-direction:column;gap:24px}
+  .footer-bottom{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo"><div class="v-box">V</div><span>VETRON</span></a>
+  <div class="nav-links">
+    <a href="index.html#calculator">Calculator</a>
+    <a href="index.html#plans">Planuri</a>
+    <a href="contact.html">Contact</a>
+    <a href="cont.html" style="color:var(--accent);font-weight:700">Contul meu</a>
+    <a href="instalare.html" class="nav-cta">INSTALEAZĂ</a>
+  </div>
+</nav>
+
+<!-- LOADING STATE -->
+<div class="page-wrap" id="loading-state">
+  <div class="loading">Se încarcă...</div>
+</div>
+
+<!-- MAIN CONTENT (hidden until loaded) -->
+<div class="page-wrap" id="main-content" style="display:none">
+  <h1 class="page-title">Contul meu</h1>
+  <p class="page-sub">Gestionează abonamentul și datele tale VETRON</p>
+
+  <!-- PROFILE -->
+  <div class="profile-card">
+    <div class="profile-avatar" id="user-avatar">U</div>
+    <div class="profile-info">
+      <div class="profile-name" id="user-name">Utilizator</div>
+      <div class="profile-email" id="user-email">—</div>
+      <span class="profile-plan-badge badge-trial" id="user-plan-badge">TRIAL</span>
+    </div>
+    <div class="profile-actions">
+      <button class="btn-logout" onclick="handleLogout()">DECONECTARE</button>
+    </div>
+  </div>
+
+  <!-- PLANS -->
+  <div class="section-label">Alege planul tău</div>
+  <div class="plans-grid" id="plans-grid">
+    <div class="plan-card" id="plan-trial">
+      <div class="plan-name" style="color:var(--think)">TRIAL</div>
+      <div class="plan-price">GRATUIT</div>
+      <div class="plan-price-sub">50 curse · 1 zi</div>
+      <ul class="plan-features">
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Bulina verdict ($/?/X)</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> 1 filtru (min RON/km)</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Tracker câștiguri</li>
+        <li class="off"><span class="check" style="color:var(--dim)">&#10007;</span> Google Routes trafic</li>
+        <li class="off"><span class="check" style="color:var(--dim)">&#10007;</span> Card PRO overlay</li>
+        <li class="off"><span class="check" style="color:var(--dim)">&#10007;</span> 6 filtre inteligente</li>
+      </ul>
+      <button class="plan-btn current" id="btn-trial">PLAN ACTIV</button>
+    </div>
+    <div class="plan-card" id="plan-simplu">
+      <div class="plan-name" style="color:var(--go)">SIMPLU</div>
+      <div class="plan-price">15 RON</div>
+      <div class="plan-price-sub">/ lună</div>
+      <ul class="plan-features">
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Tot din TRIAL</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Setări carburant</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Cost mașină real</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> 2 filtre active</li>
+        <li class="off"><span class="check" style="color:var(--dim)">&#10007;</span> Google Routes trafic</li>
+        <li class="off"><span class="check" style="color:var(--dim)">&#10007;</span> Card PRO overlay</li>
+      </ul>
+      <button class="plan-btn outline" id="btn-simplu" onclick="selectPlan('simplu')">CUMPĂRĂ SIMPLU</button>
+    </div>
+    <div class="plan-card recommended" id="plan-pro">
+      <div class="plan-badge">&#9733; RECOMANDAT</div>
+      <div class="plan-name" style="color:var(--accent)">PRO</div>
+      <div class="plan-price">25 RON</div>
+      <div class="plan-price-sub">/ lună</div>
+      <ul class="plan-features">
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Tot din SIMPLU</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Google Routes trafic real</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Card PRO overlay detaliat</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Toate 6 filtrele</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Export PDF raport</li>
+        <li class="on"><span class="check" style="color:var(--go)">&#10003;</span> Notificări zilnice</li>
+      </ul>
+      <button class="plan-btn" id="btn-pro" onclick="selectPlan('pro')">CUMPĂRĂ PRO</button>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="info-box">
+    <h3>Cum activez planul?</h3>
+    <p>1. Alege planul dorit de mai sus<br>
+    2. Vei primi un cod de activare pe WhatsApp sau email<br>
+    3. Introdu codul în aplicația VETRON pentru a activa planul<br><br>
+    Pentru întrebări: <a href="https://wa.me/40743086816" target="_blank">WhatsApp +40 743 086 816</a> sau <a href="contact.html">formular contact</a>.</p>
+  </div>
+
+  <!-- ACCOUNT INFO -->
+  <div class="info-box" style="margin-top:16px">
+    <h3>Date cont</h3>
+    <p>Membru din: <strong id="user-created">—</strong><br>
+    Tip combustibil: <strong id="user-fuel">—</strong><br>
+    Email: <strong id="user-email2">—</strong></p>
+  </div>
+</div>
+
+<!-- PURCHASE MODAL -->
+<div id="purchase-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:20px;padding:36px;max-width:420px;width:90%;text-align:center">
+    <h2 style="font-size:24px;font-weight:900;margin-bottom:8px">Cumpără plan <span id="modal-plan" style="color:var(--accent)">PRO</span></h2>
+    <p style="color:var(--muted);margin-bottom:12px;font-size:14px">Trimite-ne un mesaj și vei primi <strong style="color:var(--text)">codul de activare</strong> imediat după plată.</p>
+    <div style="background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:20px;text-align:left">
+      <p style="font-size:12px;color:var(--accent);font-weight:700;letter-spacing:2px;margin-bottom:6px">CUM FUNCȚIONEAZĂ:</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6">1. Contactează-ne pe WhatsApp sau email<br>2. Efectuează plata (transfer bancar / card)<br>3. Primești codul de activare (ex: <span style="color:var(--text);font-family:monospace">DPS-XXXX-XXXX</span>)<br>4. Introdu codul în aplicația VETRON</p>
+    </div>
+    <a href="https://wa.me/40743086816?text=Salut!%20Vreau%20sa%20cumpar%20planul%20" id="modal-wa-link" target="_blank" style="display:block;padding:14px;background:#25D366;color:#fff;border-radius:12px;font-size:16px;font-weight:800;margin-bottom:12px;text-decoration:none">WhatsApp +40 743 086 816</a>
+    <a href="mailto:vetron.ro@gmail.com" style="display:block;padding:14px;border:1px solid var(--accent);color:var(--accent);border-radius:12px;font-size:14px;font-weight:700;margin-bottom:20px;text-decoration:none">Email: vetron.ro@gmail.com</a>
+    <button onclick="closeModal()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:8px;cursor:pointer;font-size:13px">Închide</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo"><div class="v-box-sm">V</div><span>VETRON</span></div>
+      <p>Performance Intelligence for Drivers</p>
+      <p style="font-size:11px;color:var(--dim);margin-top:8px">© 2024 GO PAMPA S.R.L.<br>CUI: 47422710<br>Al. Odobescu 2, apt 15, Baia Mare 430101</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produs</h4>
+      <a href="index.html#features">Funcționalități</a>
+      <a href="index.html#calculator">Calculator</a>
+      <a href="index.html#plans">Planuri & Prețuri</a>
+      <a href="instalare.html">Instalare</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="termeni.html">Termeni și Condiții</a>
+      <a href="gdpr.html">Politica de Confidențialitate</a>
+      <a href="gdpr.html#cookies">Cookie-uri</a>
+      <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="contact.html">Formular contact</a>
+      <a href="https://wa.me/40743086816" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="contact.html">Facebook</a>
+      <a href="contact.html">Instagram</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 GO PAMPA S.R.L. · Toate drepturile rezervate</p>
+    <div class="footer-legal-links">
+      <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a>
+      <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener">SAL</a>
+      <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">SOL</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://cgvcklkewmxqbltyigme.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNndmNrbGtld214cWJsdHlpZ21lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MjU0NzEsImV4cCI6MjA5NDEwMTQ3MX0.bqryT_VgpgaxwITapafX9FsHRNlhUQALGsv8drYWXXM';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const FUEL_LABELS = {
+  benzina: 'Benzină', diesel: 'Diesel', electric: 'Electric',
+  benzina_gpl: 'Benzină + GPL', hybrid_hev: 'Hybrid HEV', hybrid_phev: 'Hybrid PHEV'
+};
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+
+  const name = (profile && profile.name) ? profile.name : session.user.user_metadata?.name || 'Utilizator';
+  const email = session.user.email || '';
+  const plan = (profile && profile.plan) ? profile.plan : 'trial';
+  const fuel = (profile && profile.fuel_type) ? profile.fuel_type : 'benzina';
+  const created = profile ? new Date(profile.created_at).toLocaleDateString('ro-RO') : '—';
+
+  document.getElementById('user-avatar').textContent = (name.charAt(0) || 'U').toUpperCase();
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('user-email').textContent = email;
+  document.getElementById('user-email2').textContent = email;
+  document.getElementById('user-fuel').textContent = FUEL_LABELS[fuel] || fuel;
+  document.getElementById('user-created').textContent = created;
+
+  var badge = document.getElementById('user-plan-badge');
+  badge.textContent = plan.toUpperCase();
+  badge.className = 'profile-plan-badge badge-' + plan;
+
+  highlightActivePlan(plan);
+
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+}
+
+function highlightActivePlan(plan) {
+  var plans = ['trial', 'simplu', 'pro'];
+  plans.forEach(function(p) {
+    var card = document.getElementById('plan-' + p);
+    var btn = document.getElementById('btn-' + p);
+    if (p === plan) {
+      card.classList.add('active');
+      if (!card.querySelector('.plan-badge-active')) {
+        var ab = document.createElement('div');
+        ab.className = 'plan-badge-active';
+        ab.textContent = 'ACTIV';
+        card.appendChild(ab);
+      }
+      btn.className = 'plan-btn current';
+      btn.textContent = 'PLAN ACTIV';
+      btn.onclick = null;
+    } else {
+      card.classList.remove('active');
+      var existing = card.querySelector('.plan-badge-active');
+      if (existing) existing.remove();
+    }
+  });
+}
+
+function selectPlan(plan) {
+  var planName = plan.toUpperCase();
+  document.getElementById('modal-plan').textContent = planName;
+  var waLink = 'https://wa.me/40743086816?text=' + encodeURIComponent('Salut! Vreau să activez planul ' + planName + ' pentru VETRON.');
+  document.getElementById('modal-wa-link').href = waLink;
+  document.getElementById('purchase-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('purchase-modal').style.display = 'none';
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+document.getElementById('purchase-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+init();
+</script>
+</body>
+</html>
